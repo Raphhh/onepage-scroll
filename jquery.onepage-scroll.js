@@ -150,8 +150,7 @@
       $("body").addClass("viewing-page-"+next.data("index"))
 
       if (history.replaceState && settings.updateURL == true) {
-        var href = window.location.href.substr(0,window.location.href.indexOf('#')) + "#" + (index + 1);
-        history.pushState( {}, document.title, href );
+          updateUrl(index + 1);
       }
       el.transformPage(settings, pos, next.data("index"));
     }
@@ -184,8 +183,7 @@
       $("body").addClass("viewing-page-"+next.data("index"))
 
       if (history.replaceState && settings.updateURL == true) {
-        var href = window.location.href.substr(0,window.location.href.indexOf('#')) + "#" + (index - 1);
-        history.pushState( {}, document.title, href );
+          updateUrl(index - 1);
       }
       el.transformPage(settings, pos, next.data("index"));
     }
@@ -205,8 +203,7 @@
         pos = ((page_index - 1) * 100) * -1;
 
         if (history.replaceState && settings.updateURL == true) {
-            var href = window.location.href.substr(0,window.location.href.indexOf('#')) + "#" + (page_index - 1);
-            history.pushState( {}, document.title, href );
+            updateUrl(page_index - 1);
         }
         el.transformPage(settings, pos, page_index);
       }
@@ -278,6 +275,16 @@
         lastAnimation = timeNow;
     }
 
+    function updateUrl(pageIndex){
+        var fragment = '',
+            $target = sections.filter('[data-index='+pageIndex+']');
+        if($target.length){
+            fragment = "#" + $target.prop('id');
+        }
+        var href = window.location.href.substr(0,window.location.href.indexOf('#')) + fragment;
+        history.pushState( {}, document.title, href );
+    }
+
     // Prepare everything before binding wheel scroll
 
     el.addClass("onepage-wrapper").css("position","relative");
@@ -346,8 +353,7 @@
           $("body")[0].className = $("body")[0].className.replace(/\bviewing-page-\d.*?\b/g, '');
           $("body").addClass("viewing-page-"+next.data("index"))
           if (history.replaceState && settings.updateURL == true) {
-            var href = window.location.href.substr(0,window.location.href.indexOf('#')) + "#" + (init_index);
-            history.pushState( {}, document.title, href );
+              updateUrl(init_index);
           }
         }
         pos = ((init_index - 1) * 100) * -1;
