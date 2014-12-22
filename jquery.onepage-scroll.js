@@ -150,7 +150,7 @@
       $("body").addClass("viewing-page-"+next.data("index"))
 
       if (history.replaceState && settings.updateURL == true) {
-          updateUrl(index + 1);
+          updateUrl(getTargetFragment(index + 1));
       }
       el.transformPage(settings, pos, next.data("index"));
     }
@@ -183,7 +183,7 @@
       $("body").addClass("viewing-page-"+next.data("index"))
 
       if (history.replaceState && settings.updateURL == true) {
-          updateUrl(index - 1);
+          updateUrl(getTargetFragment(index - 1));
       }
       el.transformPage(settings, pos, next.data("index"));
     }
@@ -203,7 +203,7 @@
         pos = ((page_index - 1) * 100) * -1;
 
         if (history.replaceState && settings.updateURL == true) {
-            updateUrl(page_index - 1);
+            updateUrl(getTargetFragment(page_index - 1));
         }
         el.transformPage(settings, pos, page_index);
       }
@@ -275,14 +275,17 @@
         lastAnimation = timeNow;
     }
 
-    function updateUrl(pageIndex){
-        var fragment = '',
-            $target = sections.filter('[data-index='+pageIndex+']');
-        if($target.length){
-            fragment = "#" + $target.prop('id');
-        }
+    function updateUrl(fragment){
         var href = window.location.href.substr(0,window.location.href.indexOf('#')) + fragment;
         history.pushState( {}, document.title, href );
+    }
+
+    function getTargetFragment(pageIndex){
+        var $target = sections.filter('[data-index='+pageIndex+']');
+        if($target.length){
+            return "#" + $target.prop('id');
+        }
+        return '';
     }
 
     // Prepare everything before binding wheel scroll
@@ -312,7 +315,7 @@
 
 
       if(settings.pagination == true) {
-        paginationList += "<li><a data-index='"+(i+1)+"' href='#" + (i+1) + "'></a></li>"
+        paginationList += "<li><a data-index='"+(i+1)+"' href='" + getTargetFragment(i+1) + "'></a></li>"
       }
     });
 
@@ -353,7 +356,7 @@
           $("body")[0].className = $("body")[0].className.replace(/\bviewing-page-\d.*?\b/g, '');
           $("body").addClass("viewing-page-"+next.data("index"))
           if (history.replaceState && settings.updateURL == true) {
-              updateUrl(init_index);
+              updateUrl(getTargetFragment(init_index));
           }
         }
         pos = ((init_index - 1) * 100) * -1;
